@@ -1,0 +1,16 @@
+waypoints:
+  - position: {x: 0.323216, y: 0.614674, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+
+  - position: {x: 0.910004, y: -0.073378, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+
+  - position: {x: 1.455718, y: 0.520824, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+
+  - position: {x: 0.861467, y: 1.073248, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+
+  - position: {x: 0.031059, y: 0.527953, z: 0.0}
+    orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+

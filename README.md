@@ -20,13 +20,13 @@ The robot performs looped perimeter patrols and waypoint-based navigation while 
 ### Step 1 – Launch Gazebo Simulation
 Start the TurtleBot3 simulation in Gazebo:
 
-      ```
+      
       export TURTLEBOT3_MODEL=burger
       ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ### Step 2 – Launch Navigation2 with Map
 Bring up the Nav2 stack with AMCL, costmaps, and RViz:
      
-      ```
+      
       ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True
 This loads:
 map_server
@@ -45,12 +45,12 @@ Set a Nav2 goal manually in RViz:
 (b) Waypoint Patrol (Square / Loop)
 Run waypoints defined in waypoints.yaml:
       
-      ```
+      
       ros2 run waypoint_helper follow_waypoints --ros-args -p waypoints_file:=$HOME/geckon_ws/saved_maps/waypoints.yaml
 (c) Pillar Loop Patrol
 Run patrol waypoints around a pillar structure using pillar_loop.yaml:
 
-      ```
+      
       ros2 run waypoint_helper follow_waypoints --ros-args -p waypoints_file:=$HOME/geckon_ws/saved_maps/pillar_loop.yaml
 
 📂 Replay Pre-Recorded Bag File
@@ -60,19 +60,19 @@ Follow these steps to visualize results in RViz:
 
 Step 1 – Launch Nav2 with sim time enabled
 
-      ```
+      
       ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True
 Step 2 – Ensure use_sim_time is set
 Run these commands so all nodes sync with the bag’s clock:
 
-      ```
+      
       ros2 param set /rviz2 use_sim_time true
       ros2 param set /amcl use_sim_time true
       ros2 param set /map_server use_sim_time true
       ros2 param set /waypoint_follower use_sim_time true
 Step 3 – Replay the bag
 
-      ```
+      
       ros2 bag play ~/geckon_ws/bags/autonav_nav2 --clock
 
 🎯 Expected Results

@@ -52,7 +52,7 @@ Run patrol waypoints around a pillar structure using pillar_loop.yaml:
 
       
       ros2 run waypoint_helper follow_waypoints --ros-args -p waypoints_file:=$HOME/geckon_ws/saved_maps/pillar_loop.yaml
-
+---
 📂 Replay Pre-Recorded Bag File
 
 A bag file of the patrol run has already been recorded and stored in ~/geckon_ws/bags/autonav_nav2.
@@ -74,7 +74,7 @@ Step 3 – Replay the bag
 
       
       ros2 bag play ~/geckon_ws/bags/autonav_nav2 --clock
-
+---
 🎯 Expected Results
 
 The robot performs autonomous waypoint patrol and pillar loop navigation.
@@ -84,7 +84,7 @@ RViz shows:
 **TF transforms
 **Patrol path execution
 **When replaying the bag file, the patrol loop is reproduced exactly as recorded.
-
+---
 📌 Notes
 Waypoints are stored in ~/geckon_ws/saved_maps/waypoints.yaml and ~/geckon_ws/saved_maps/pillar_loop.yaml.
 Deliverable 3 focuses on autonomous patrol navigation with Nav2 and evaluation via bag replay.

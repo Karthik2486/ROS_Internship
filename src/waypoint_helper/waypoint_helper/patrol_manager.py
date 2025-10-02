@@ -29,7 +29,7 @@ class PatrolManager(Node):
         self.create_service(Trigger, 'patrol_manager/resume_patrol', self._on_resume)
         self.create_service(Trigger, 'patrol_manager/stop_patrol', self._on_stop)
 
-        # Subscribe to clicked_point (PointStamped from RViz)
+        # Subscribe to clicked_point 
         self._clicked_pose = None
         self.create_subscription(PointStamped, '/clicked_point', self._on_clicked_point, 10)
 
@@ -44,9 +44,7 @@ class PatrolManager(Node):
         # Start patrol immediately
         self._send_patrol_goal()
 
-    # ----------------------------
-    # Load waypoints from YAML
-    # ----------------------------
+   
     def _load_waypoints(self, yaml_file):
         with open(yaml_file, 'r') as f:
             data = yaml.safe_load(f)
@@ -66,9 +64,7 @@ class PatrolManager(Node):
             self.get_logger().info(f"Loaded WP{i}: ({pose.pose.position.x:.3f}, {pose.pose.position.y:.3f})")
         return waypoints
 
-    # ----------------------------
-    # Handle clicked point
-    # ----------------------------
+  
     def _on_clicked_point(self, msg: PointStamped):
         pose = PoseStamped()
         pose.header = msg.header
@@ -77,9 +73,7 @@ class PatrolManager(Node):
         self._clicked_pose = pose
         self.get_logger().info(f"Cached clicked pose: ({pose.pose.position.x:.2f}, {pose.pose.position.y:.2f})")
 
-    # ----------------------------
-    # Send patrol goal
-    # ----------------------------
+    
     def _send_patrol_goal(self):
         if self._stopped or self._rerouting:
             self.get_logger().warn("Patrol paused (stopped or rerouting), not sending patrol goal.")
@@ -109,9 +103,7 @@ class PatrolManager(Node):
             self.get_logger().info("Restarting patrol cycle...")
             self._send_patrol_goal()
 
-    # ----------------------------
-    # Services
-    # ----------------------------
+    
     def _on_reroute(self, request, response):
         if self._clicked_pose is None:
             response.success = False
@@ -170,9 +162,7 @@ class PatrolManager(Node):
         return response
 
 
-# ----------------------------
-# Main
-# ----------------------------
+
 def main(args=None):
     rclpy.init(args=args)
     node = PatrolManager()

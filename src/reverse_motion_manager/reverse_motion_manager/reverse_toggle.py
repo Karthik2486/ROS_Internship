@@ -27,7 +27,7 @@ class ReverseToggle(Node):
     def __init__(self):
         super().__init__('reverse_toggle')
 
-        # Targets (Nav2 node names are standard on TB3 bringup)
+        # Targets 
         self.controller_srv = self.create_client(SetParameters, '/controller_server/set_parameters')
         self.smoother_srv   = self.create_client(SetParameters, '/velocity_smoother/set_parameters')
 
@@ -49,7 +49,7 @@ class ReverseToggle(Node):
         if not future.done():
             return False, "timeout"
         result = future.result()
-        # Consider it success if at least one parameter applied successfully
+        
         ok = any(r.successful for r in result.results)
         reason = "; ".join([r.reason for r in result.results if not r.successful]) or "ok"
         return ok, reason
@@ -57,7 +57,7 @@ class ReverseToggle(Node):
     def enable_cb(self, req, res):
         self.get_logger().info('Enabling reverse motion...')
 
-        # DWB-style params (if DWB is active)
+       
         dwb_params = [
             p_double('FollowPath.min_vel_x', -0.26),   # allow reverse
             p_double('FollowPath.max_vel_x',  0.30),
@@ -69,14 +69,14 @@ class ReverseToggle(Node):
         ]
         ok1, reason1 = self.set_params(self.controller_srv, dwb_params)
 
-        # RPP-style params (if RPP is active)
+       
         rpp_params = [
             p_bool('FollowPath.allow_reversing', True),
             p_bool('FollowPath.use_rotate_to_heading', False),
         ]
         ok2, reason2 = self.set_params(self.controller_srv, rpp_params)
 
-        # Velocity smoother must allow negative x
+       
         smooth_params = [
             p_darray('min_velocity', [-0.5, 0.0, -2.5]),
         ]
@@ -93,21 +93,21 @@ class ReverseToggle(Node):
     def disable_cb(self, req, res):
         self.get_logger().info('Disabling reverse motion (forward-only)...')
 
-        # DWB-style: clamp to forward only
+        
         dwb_params = [
             p_double('FollowPath.min_vel_x', 0.0),
             p_double('FollowPath.vx_samples', 20),
         ]
         ok1, reason1 = self.set_params(self.controller_srv, dwb_params)
 
-        # RPP-style
+        
         rpp_params = [
             p_bool('FollowPath.allow_reversing', False),
             p_bool('FollowPath.use_rotate_to_heading', True),
         ]
         ok2, reason2 = self.set_params(self.controller_srv, rpp_params)
 
-        # Velocity smoother: non-negative x OK (keep symmetrical limits if you prefer)
+        
         smooth_params = [
             p_darray('min_velocity', [0.0, 0.0, -2.5]),
         ]

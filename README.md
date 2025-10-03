@@ -1,5 +1,60 @@
 # ROS_Internship
 
+# Deliverable 1: Environment Mapping & Localisation
+
+This deliverable demonstrates **environment mapping and localisation** using the standard **TurtleBot3 stack** with ROS 2 Humble.  
+Since TurtleBot3 already provides official packages for SLAM and Navigation2, the goal is to configure, test, and show a working workflow for:  
+
+- **SLAM (Cartographer)** for map building  
+- **Persistent map saving** (YAML + PGM)  
+- **Localisation with AMCL**  
+- **Re-localisation after reboot or drift**  
+
+---
+
+## 🚀 Running the Mapping & Localisation
+
+### 1. Launch Gazebo Simulation
+Start the default TurtleBot3 world in Gazebo:
+            
+            ```bash
+            export TURTLEBOT3_MODEL=burger
+            ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+### 2. Run Cartographer SLAM
+Bring up Cartographer to perform SLAM while driving the robot:
+
+            ```
+            ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
+Drive the robot manually to explore the world:
+
+            ```
+            ros2 run turtlebot3_teleop teleop_keyboard
+As you move the robot, a 2D occupancy grid map will be built in RViz.
+
+### 3. Save the Persistent Map
+Once mapping is complete, save the map to disk:
+
+            ```
+            ros2 run nav2_map_server map_saver_cli -f ~/geckon_ws/saved_maps/my_map
+
+This produces:
+- my_map.pgm (map image)
+- my_map.yaml (map metadata)
+
+### 4. Launch Navigation with AMCL
+Close Cartographer, then start Navigation2 with the saved map:
+
+            ```
+            ros2 launch turtlebot3_navigation2 navigation2.launch.py \
+            use_sim_time:=True map:=$HOME/geckon_ws/saved_maps/my_map.yaml
+
+✅ Deliverable Objectives Met
+Mapping: Achieved using Cartographer.
+Persistent map: Saved with map_saver_cli.
+Localisation: Achieved with AMCL on the saved map.
+Re-localisation: Demonstrated with RViz "2D Pose Estimate".
+---
+
 # Deliverable 3: Autonomous Patrol and Navigation
 
 This deliverable demonstrates **autonomous patrol and navigation** using TurtleBot3 in Gazebo with the **Navigation2 (Nav2) stack**.  

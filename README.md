@@ -17,24 +17,24 @@ Since TurtleBot3 already provides official packages for SLAM and Navigation2, th
 ### 1. Launch Gazebo Simulation
 Start the default TurtleBot3 world in Gazebo:
             
-            ```bash
+            
             export TURTLEBOT3_MODEL=burger
             ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ### 2. Run Cartographer SLAM
 Bring up Cartographer to perform SLAM while driving the robot:
 
-            ```
+            
             ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=True
 Drive the robot manually to explore the world:
 
-            ```
+            
             ros2 run turtlebot3_teleop teleop_keyboard
 As you move the robot, a 2D occupancy grid map will be built in RViz.
 
 ### 3. Save the Persistent Map
 Once mapping is complete, save the map to disk:
 
-            ```
+            
             ros2 run nav2_map_server map_saver_cli -f ~/geckon_ws/saved_maps/my_map
 
 This produces:
@@ -44,7 +44,7 @@ This produces:
 ### 4. Launch Navigation with AMCL
 Close Cartographer, then start Navigation2 with the saved map:
 
-            ```
+            
             ros2 launch turtlebot3_navigation2 navigation2.launch.py \
             use_sim_time:=True map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 
@@ -162,12 +162,12 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
 
 1. **Launch Gazebo simulation with TurtleBot3 world:**
 
-               ```bash
+               
                export TURTLEBOT3_MODEL=burger
                ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 2. **Launch Navigation2 with your saved map:**
 
-               ```
+               
                source ~/geckon_ws/install/setup.bash
                export TURTLEBOT3_MODEL=burger
                ros2 launch turtlebot3_navigation2 navigation2.launch.py \
@@ -175,12 +175,12 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
                map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 3. **Start the waypoint follower (FollowWaypoints action server):**
 
-               ```
+               
                source ~/geckon_ws/install/setup.bash
                ros2 run nav2_waypoint_follower waypoint_follower
 4. **Run Patrol Manager node (continuous looping patrol):**
 
-               ```
+               
                source ~/geckon_ws/install/setup.bash
                ros2 run waypoint_helper patrol_manager
       The robot will start looping around the waypoints defined in
@@ -190,7 +190,7 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
    - In RViz, select the Publish Point tool and click anywhere on the map.
    - Then call the reroute service:
 
-               ```
+               
                ros2 service call /patrol_manager/reroute_to_last_click std_srvs/srv/Trigger {}
 
      The robot will interrupt patrol → navigate to clicked point → resume patrol.

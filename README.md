@@ -1,6 +1,6 @@
 # ROS_Internship
 
-# ROS Internship – Deliverable 3: Autonomous Patrol and Navigation
+# Deliverable 3: Autonomous Patrol and Navigation
 
 This deliverable demonstrates **autonomous patrol and navigation** using TurtleBot3 in Gazebo with the **Navigation2 (Nav2) stack**.  
 The robot performs looped perimeter patrols and waypoint-based navigation while maintaining safety and path efficiency.

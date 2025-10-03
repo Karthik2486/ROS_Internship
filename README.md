@@ -79,11 +79,11 @@ Step 3 – Replay the bag
 
 The robot performs autonomous waypoint patrol and pillar loop navigation.
 RViz shows:
-*Map with AMCL localization
-*Global and local costmaps
-*TF transforms
-*Patrol path execution
-*When replaying the bag file, the patrol loop is reproduced exactly as recorded.
+- Map with AMCL localization
+- Global and local costmaps
+- TF transforms
+- Patrol path execution
+- When replaying the bag file, the patrol loop is reproduced exactly as recorded.
 ---
 📌 Notes
 Waypoints are stored in ~/geckon_ws/saved_maps/waypoints.yaml and ~/geckon_ws/saved_maps/pillar_loop.yaml.

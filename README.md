@@ -49,10 +49,10 @@ Close Cartographer, then start Navigation2 with the saved map:
             use_sim_time:=True map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 
 ✅ Deliverable Objectives Met
-Mapping: Achieved using Cartographer.
-Persistent map: Saved with map_saver_cli.
-Localisation: Achieved with AMCL on the saved map.
-Re-localisation: Demonstrated with RViz "2D Pose Estimate".
+- Mapping: Achieved using Cartographer.
+- Persistent map: Saved with map_saver_cli.
+- Localisation: Achieved with AMCL on the saved map.
+- Re-localisation: Demonstrated with RViz "2D Pose Estimate.
 ---
 
 # Deliverable 3: Autonomous Patrol and Navigation

@@ -84,13 +84,10 @@ RViz shows:
 - TF transforms
 - Patrol path execution
 - When replaying the bag file, the patrol loop is reproduced exactly as recorded.
----
-📌 Notes
-Waypoints are stored in ~/geckon_ws/saved_maps/waypoints.yaml and ~/geckon_ws/saved_maps/pillar_loop.yaml.
-Deliverable 3 focuses on autonomous patrol navigation with Nav2 and evaluation via bag replay.
+
 ---
 
-# ROS_Internship – Deliverable 4: Trigger-Based Rerouting
+# Deliverable 4: Trigger-Based Rerouting
 
 This deliverable demonstrates **Trigger-Based Rerouting** using TurtleBot3 in Gazebo with the **Navigation2 (Nav2)** stack.  
 During a patrol loop, the robot can accept an **external trigger** (via RViz “Publish Point” and a service call) to **interrupt its patrol**, navigate to the clicked location, and then **resume its regular patrol loop**.

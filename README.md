@@ -324,12 +324,12 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
 
 1. Launch Gazebo
 
-                            ```
+                            
                            export TURTLEBOT3_MODEL=burger
                            ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 2. Launch Navigation2 (with map and RViz)
 
-                           ```
+                           
                            source ~/geckon_ws/install/setup.bash
                         export TURTLEBOT3_MODEL=burger
                         ros2 launch turtlebot3_navigation2 navigation2.launch.py \
@@ -337,17 +337,17 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
                           map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 3. Start Waypoint Follower
 
-                           ```
+                           
                            source ~/geckon_ws/install/setup.bash
                         ros2 run nav2_waypoint_follower waypoint_follower
 4. Start Patrol Manager
 
-                           ```
+                           
                            source ~/geckon_ws/install/setup.bash
                         ros2 run waypoint_helper patrol_manager
 5. Start Reverse Motion Manager
 
-                           ```
+                           
                            source ~/geckon_ws/install/setup.bash
                         ros2 run reverse_motion_manager reverse_toggle
 
@@ -355,26 +355,26 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
 
 Trial A – Forward-only (Reverse Disabled)
 
-                        ```
+                        
                         ros2 service call /reverse_motion/disable std_srvs/srv/Trigger {}
 a). In RViz, click a point behind the robot using the Publish Point tool.
 
 b).  Trigger reroute:
 
-                        ```
+                        
                         ros2 service call /patrol_manager/reroute_to_last_click std_srvs/srv/Trigger {}
 c). The robot rotates to face the goal, moves forward to reach it, then resumes patrol.
 
 ---
 Trial B – Reverse Enabled
 
-                        ```
+                        
                         ros2 service call /reverse_motion/enable std_srvs/srv/Trigger {}
 a). In RViz, click the same point behind the robot.
 
 b). Trigger reroute again:
 
-                        ```
+                        
                         ros2 service call /patrol_manager/reroute_to_last_click std_srvs/srv/Trigger {}
 c). The robot drives backward directly toward the goal (negative linear.x velocity).
 d). Upon reaching the point, it resumes the patrol loop.

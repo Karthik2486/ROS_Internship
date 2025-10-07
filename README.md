@@ -219,3 +219,102 @@ Implementation:
 - After reaching the reroute destination, Patrol Manager resumes the waypoint patrol loop.
 Outcome: System demonstrates adaptability and robustness — robot can both maintain routine patrols and handle unexpected commands without manual reset.
    
+
+
+# Deliverable 5 – Reverse Motion Optimisation
+
+---
+
+## 🎯 Objective
+
+The goal of this deliverable is to **enable reverse (backward) motion** in the Navigation2 (Nav2) local planner and demonstrate its advantage in narrow or constrained environments.  
+When reverse motion is disabled, the robot must rotate 180° to reach goals behind it.  
+With reverse motion optimisation, the robot can **drive backward directly** toward those targets, saving time and maintaining stability.
+
+---
+
+## ⚙️ Implementation Overview
+
+Reverse motion capability was implemented using a dedicated node:  
+**`reverse_motion_manager/reverse_toggle.py`**
+
+This node dynamically enables or disables reverse movement in Nav2 by updating relevant planner and velocity smoother parameters through ROS 2 parameter services.
+
+### Key Parameter Adjustments
+
+| Component | Parameter | Forward-only | Reverse-enabled |
+|------------|------------|---------------|-----------------|
+| `controller_server` | `FollowPath.min_vel_x` | `0.0` | `-0.26` |
+| `controller_server` | `FollowPath.vx_samples` | `20` | `20` |
+| `controller_server` | `FollowPath.acc_lim_x` | `3.0` | `3.0` |
+| `controller_server` | `FollowPath.decel_lim_x` | `-2.5` | `-2.5` |
+| `velocity_smoother` | `min_velocity` | `[0.0, 0.0, -2.5]` | `[-0.5, 0.0, -2.5]` |
+
+These parameters allow the DWB Local Planner and the Velocity Smoother to plan and execute trajectories with **negative linear velocities** (reverse motion).
+
+---
+
+## 🧩 System Nodes & Flow
+
+**Core Nodes Involved**
+
+- `turtlebot3_gazebo` – Simulated environment  
+- `navigation2` – Full Nav2 stack (planner, controller, smoother)  
+- `waypoint_follower` – FollowWaypoints action server  
+- `waypoint_helper/patrol_manager` – Executes continuous patrol loops and handles rerouting  
+- `reverse_motion_manager/reverse_toggle` – Enables/disables reverse dynamically
+
+**Data Flow**
+
+1. `patrol_manager` controls waypoints and patrol routes.  
+2. Upon an external reroute command (`/patrol_manager/reroute_to_last_click`), the robot computes a new path.  
+3. The `reverse_toggle` node can modify Nav2’s local planner parameters at runtime:  
+   - **Disable reverse** → robot turns to face goal.  
+   - **Enable reverse** → robot reverses directly to the target.  
+4. After reaching the reroute goal, the patrol resumes normally.
+
+---
+
+## 🧠 Node Communication Diagram
+
+```text
++------------------+
+|  RViz            |
+|  (Publish Point) |
++---------+--------+
+          |
+          v
+ /clicked_point
+          |
+          v
++-------------------------+
+|   waypoint_helper       |
+|   (Patrol Manager Node) |
++-----------+-------------+
+            |
+   /follow_waypoints action
+            |
+            v
++------------------------+
+|  Nav2 Controller       |
+|  (DWB Local Planner)   |
++-----------+------------+
+            |
+       /cmd_vel
+            |
+            v
++--------------------+
+|  TurtleBot3 Base   |
+|  (Gazebo)          |
++--------------------+
+            ^
+            |
+  Reverse control via:
+  /reverse_motion/enable
+  /reverse_motion/disable
+            |
+            v
++----------------------------+
+| reverse_motion_manager     |
+| (Reverse Toggle Node)      |
++----------------------------+

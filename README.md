@@ -82,7 +82,12 @@ Start the TurtleBot3 simulation in Gazebo:
 Bring up the Nav2 stack with AMCL, costmaps, and RViz:
      
       
-      ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True
+      source ~/geckon_ws/install/setup.bash
+      export TURTLEBOT3_MODEL=burger
+      ros2 launch turtlebot3_navigation2 navigation2.launch.py \
+      use_sim_time:=True \
+      map:=$HOME/geckon_ws/saved_maps/my_map.yaml
+
 This loads:
 map_server
 amcl (localization)

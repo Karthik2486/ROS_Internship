@@ -27,7 +27,7 @@ ament_target_dependencies(${PROJECT_NAME}
   geometry_msgs
 )
 
-# ✅ Register the plugin with pluginlib
+# Register the plugin with pluginlib
 pluginlib_export_plugin_description_file(nav2_costmap_2d restricted_zone_layer.xml)
 
 # Install library

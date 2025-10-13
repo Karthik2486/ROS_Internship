@@ -3,3 +3,4 @@ install/
 log/
 *.bag
 *.mkv
+_backup_submodules/

@@ -14,7 +14,7 @@ RestrictedZoneLayer::RestrictedZoneLayer() {}
 
 void RestrictedZoneLayer::onInitialize()
 {
-  auto node = node_.lock();  // ✅ lock the weak_ptr
+  auto node = node_.lock();  // lock the weak_ptr
   enabled_ = true;
 
   RCLCPP_INFO(node->get_logger(), "[RestrictedZoneLayer] Initialized and waiting for polygons...");
@@ -48,7 +48,7 @@ void RestrictedZoneLayer::updateBounds(
   {
     for (auto & p : poly.polygon.points)
     {
-      // ✅ Explicitly cast float→double to avoid type mismatch
+      
       *min_x = std::min(*min_x, static_cast<double>(p.x));
       *min_y = std::min(*min_y, static_cast<double>(p.y));
       *max_x = std::max(*max_x, static_cast<double>(p.x));
@@ -111,5 +111,5 @@ void RestrictedZoneLayer::reset()
   RCLCPP_INFO(node->get_logger(), "[RestrictedZoneLayer] Zones cleared.");
 }
 
-}  // namespace restricted_zone_layer_ns
+}  
 

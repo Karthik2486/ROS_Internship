@@ -12,7 +12,7 @@ Since TurtleBot3 already provides official packages for SLAM and Navigation2, th
 
 ---
 
-## 🚀 Running the Mapping & Localisation
+## Running the Mapping & Localisation
 
 ### 1. Launch Gazebo Simulation
 Start the default TurtleBot3 world in Gazebo:
@@ -48,7 +48,7 @@ Close Cartographer, then start Navigation2 with the saved map:
             ros2 launch turtlebot3_navigation2 navigation2.launch.py \
             use_sim_time:=True map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 
-✅ Deliverable Objectives Met
+ Deliverable Objectives Met
 - Mapping: Achieved using Cartographer.
 - Persistent map: Saved with map_saver_cli.
 - Localisation: Achieved with AMCL on the saved map.
@@ -239,7 +239,7 @@ The robot performs looped perimeter patrols and waypoint-based navigation while 
 
 ---
 
-## ✅ Features Demonstrated
+##  Features Demonstrated
 - **Nav2 with DWB planner**
 - **Waypoint patrol navigation (pillar loop)**
 - **AMCL localization with saved map**
@@ -247,7 +247,7 @@ The robot performs looped perimeter patrols and waypoint-based navigation while 
 
 ---
 
-## 🚀 Running Autonomous Patrol
+##  Running Autonomous Patrol
 
 ### Step 1 – Launch Gazebo Simulation
 Start the TurtleBot3 simulation in Gazebo:
@@ -290,7 +290,7 @@ Run patrol waypoints around a pillar structure using pillar_loop.yaml:
       
       ros2 run waypoint_helper follow_waypoints --ros-args -p waypoints_file:=$HOME/geckon_ws/saved_maps/pillar_loop.yaml
 ---
-📂 Replay Pre-Recorded Bag File
+ Replay Pre-Recorded Bag File
 
 A bag file of the patrol run has already been recorded and stored in ~/geckon_ws/bags/autonav_nav2.
 Follow these steps to visualize results in RViz:
@@ -312,7 +312,7 @@ Step 3 – Replay the bag
       
       ros2 bag play ~/geckon_ws/bags/autonav_nav2 --clock
 ---
-🎯 Expected Results
+ Expected Results
 
 The robot performs autonomous waypoint patrol and pillar loop navigation.
 RViz shows:
@@ -331,7 +331,7 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
 
 ---
 
-## ✅ Features Implemented
+##  Features Implemented
 
 - **Continuous patrol loop** using Navigation2 FollowWaypoints action  
 - **Trigger-based rerouting** via RViz `/clicked_point` and `/patrol_manager/reroute_to_last_click` service  
@@ -340,7 +340,7 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
 
 ---
 
-## 🚀 Running Trigger-Based Rerouting
+##  Running Trigger-Based Rerouting
 
 1. **Launch Gazebo simulation with TurtleBot3 world:**
 
@@ -379,7 +379,7 @@ During a patrol loop, the robot can accept an **external trigger** (via RViz “
 
 ---
 
-🎥 Demo Video
+ Demo Video
 
 Since bag file recordings were not used for this deliverable, a screen recording was created and uploaded to this repository.
 The video demonstrates:
@@ -391,7 +391,7 @@ The video demonstrates:
 This serves as direct visual evidence of Deliverable 4 functionality.
 
 ---
-📝 Deliverable Explanation
+ Deliverable Explanation
 
 Objective: Allow the patrol system to be interrupted by external events (e.g., operator command, alarm), handle the rerouting, and then gracefully resume normal operations.
 Implementation:
@@ -407,7 +407,7 @@ Outcome: System demonstrates adaptability and robustness — robot can both main
 
 ---
 
-## 🎯 Objective
+##  Objective
 
 The goal of this deliverable is to **enable reverse (backward) motion** in the Navigation2 (Nav2) local planner and demonstrate its advantage in narrow or constrained environments.  
 When reverse motion is disabled, the robot must rotate 180° to reach goals behind it.  
@@ -415,7 +415,7 @@ With reverse motion optimisation, the robot can **drive backward directly** towa
 
 ---
 
-## ⚙️ Implementation Overview
+##  Implementation Overview
 
 Reverse motion capability was implemented using a dedicated node:  
 **`reverse_motion_manager/reverse_toggle.py`**
@@ -436,7 +436,7 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
 
 ---
 
-## 🧩 System Nodes & Flow
+##  System Nodes & Flow
 
 **Core Nodes Involved**
 
@@ -457,7 +457,7 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
 
 ---
 
-## 🧠 Node Communication Diagram
+##  Node Communication Diagram
 
             ```text
             +------------------+
@@ -502,7 +502,7 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
             +----------------------------+
 ---
 
-### 🚀 Running the Simulation
+###  Running the Simulation
 
 1. Launch Gazebo
 
@@ -533,7 +533,7 @@ These parameters allow the DWB Local Planner and the Velocity Smoother to plan a
                            source ~/geckon_ws/install/setup.bash
                         ros2 run reverse_motion_manager reverse_toggle
 
-🔄 Test Procedure
+ Test Procedure
 
 Trial A – Forward-only (Reverse Disabled)
 

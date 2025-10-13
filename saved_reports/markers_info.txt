@@ -1,0 +1,3 @@
+Type: visualization_msgs/msg/Marker
+Publisher count: 1
+Subscription count: 1

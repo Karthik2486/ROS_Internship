@@ -1,0 +1,11 @@
+<library path="librestricted_zone_layer">
+  <class
+      name="restricted_zone_layer_ns::RestrictedZoneLayer"
+      type="restricted_zone_layer_ns::RestrictedZoneLayer"
+      base_class_type="nav2_costmap_2d::Layer">
+    <description>
+      A custom costmap layer that marks restricted zones as obstacles in Nav2.
+    </description>
+  </class>
+</library>
+

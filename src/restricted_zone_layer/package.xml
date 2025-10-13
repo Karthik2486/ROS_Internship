@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>restricted_zone_layer</name>
+  <version>0.0.1</version>
+  <description>Restricted zone costmap plugin for Nav2</description>
+  <maintainer email="you@example.com">Karthik</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>pluginlib</depend>
+  <depend>nav2_costmap_2d</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+

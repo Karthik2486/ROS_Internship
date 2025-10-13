@@ -243,7 +243,6 @@ If the goal lies across or inside the polygon, the planner should produce a path
 
 ---
 
-
 ## 9. Outcome
 
 With the plugin enabled and polygons published in the `map` frame, Nav2 composes the restricted zone layer with other layers and produces paths that avoid these polygons. The visualization node provides clear operator feedback. Evidence files and bag recordings can be produced from the commands above for review and archival.

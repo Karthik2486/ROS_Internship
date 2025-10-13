@@ -55,6 +55,201 @@ Close Cartographer, then start Navigation2 with the saved map:
 - Re-localisation: Demonstrated with RViz "2D Pose Estimate.
 ---
 
+
+# Deliverable 2 — Restricted Zones for Nav2 (ROS 2 Humble)
+
+## 1. Objective
+
+Implement “restricted zones” that the robot must not enter while using the standard Nav2 stack. The solution integrates with Nav2 costmaps so that planners automatically avoid operator-defined polygons on the map. The implementation must be observable in RViz and provide reproducible evidence (topics, nodes, graphs, and recordings).
+
+---
+
+## 2. What was implemented (high-level)
+
+1. **A Nav2 Costmap Plugin (`restricted_zone_layer`)**  
+   - C++ plugin for `nav2_costmap_2d`.  
+   - Subscribes to a polygon topic and rasterizes those polygons into the costmap as lethal cells (cost=254).  
+   - Works with both **global** and **local** costmaps so the global planner and the controller treat these regions as obstacles and reroute.
+
+2. **A Visualization Node (`restricted_zone_viz`)**  
+   - Python node that consumes the same polygon input and publishes a `visualization_msgs/Marker` for RViz.  
+   - Purpose: (a) operator feedback that the polygon was received in the intended frame (`map`) and (b) evidence for the demo and supervisor.  
+   - This node does not influence planning directly; it only visualizes.
+
+3. **Nav2 configuration (`restricted_nav2_params.yaml`)**  
+   - Adds the plugin to the `plugins` list of both local and global costmaps.  
+   - Sets plugin-specific parameters (topic name, enabled flag, lethal cost).
+
+This approach uses standard Nav2 extension points, so we keep the built-in planners/controllers and simply feed them richer costmaps. It avoids custom planners and remains compatible with other layers (static/obstacle/inflation).
+
+---
+
+## 3. Why a costmap plugin (and why it works)
+
+- **Nav2 planning is costmap-driven.** Global and local planners (e.g., `Navfn`, `Smac`, `DWB`) read from costmaps; cells with high/lethal cost are effectively “blocked.”  
+- **Plugins participate in costmap composition.** At every update, the costmap combines multiple layers (static, obstacle, inflation, custom). Our `restricted_zone_layer` injects lethal costs inside any polygon, so those areas become non-traversable.  
+- **Planner-agnostic.** Because planners only see the final costmap, they naturally avoid restricted regions without modifying planner code.
+
+---
+
+## 4. What is `restricted_zone_layer`
+
+- A **nav2_costmap_2d** layer plugin written in C++.  
+- Subscribes to: `/restricted_zone/polygons` (`geometry_msgs/PolygonStamped`).  
+- For each polygon, it:
+  1. Transforms coordinates in the costmap’s frame (assumed `map` for global, `odom`/`map` for local as configured).  
+  2. Rasterizes the polygon footprint into grid indices.  
+  3. Sets those grid cells’ cost to `LETHAL_OBSTACLE` (defaults to 254).  
+- Exposes parameters via YAML:
+  - `enabled` (bool)
+  - `zone_topic` (string, default `/restricted_zone/polygons`)
+  - `lethal_cost` (int, default 254)
+
+---
+
+## 5. What is `restricted_zone_viz` (and why we needed it)
+
+- A **visualization-only** node that aids development, debugging, and demonstration.  
+- Subscribes to the same polygon topic and publishes:
+  - `/restricted_zone/markers` (`visualization_msgs/Marker`), a closed red polygon line/filled shape in the `map` frame.  
+- Reasons to include it:
+  - Confirm the publisher is sending polygons in the correct frame and shape.
+  - Confirm timing and persistence (e.g., if the polygon is latched or republished).
+  - Provide a clear RViz overlay for supervisors and reviewers.
+
+---
+
+## 6. Simplified data flow
+
+```
+
+User / Tools (publish PolygonStamped)
+|
+v
+/ restricted_zone / polygons  (geometry_msgs/PolygonStamped)
+|                                 |
+|                                 +--> restricted_zone_viz
+|                                       - Subscribes to polygons
+|                                       - Publishes /restricted_zone/markers (Marker)
+|
++--> restricted_zone_layer (costmap plugin)
+- Subscribes to polygons
+- Writes lethal cells into costmap
+|
+v
+Nav2 Global/Local Costmaps  --->  Nav2 Planner/Controller  ---> Robot avoids restricted zones
+
+````
+
+Key topics:
+- **Input polygon**: `/restricted_zone/polygons`  
+- **Visualization marker**: `/restricted_zone/markers`
+
+---
+
+## 7. Files and locations (summary)
+
+- `src/restricted_zone_layer/src/restricted_zone_layer.cpp`  
+- `src/restricted_zone_layer/include/restricted_zone_layer/restricted_zone_layer.hpp`  
+- `src/restricted_zone_layer/restricted_zone_layer.xml`  
+- `src/restricted_zone_layer/CMakeLists.txt`  
+- `src/restricted_zone_layer/package.xml`  
+- `src/restricted_zone_layer/config/restricted_nav2_params.yaml`  
+- `src/restricted_zone_viz/restricted_zone_viz/zone_viz.py`  
+- `src/restricted_zone_viz/package.xml`, `setup.py`, `resource/restricted_zone_viz`
+
+---
+
+## 8. Step-by-step: build, launch, publish polygons, verify
+
+> Assumptions: ROS 2 Humble installed; TurtleBot3 packages available; workspace is `~/geckon_ws`.
+
+### 8.1 Build and source
+```bash
+cd ~/geckon_ws
+rm -rf build install log
+colcon build --symlink-install --packages-select restricted_zone_layer restricted_zone_viz
+source /opt/ros/humble/setup.bash
+source ~/geckon_ws/install/setup.bash
+````
+
+### 8.2 Launch Gazebo world (if sim)
+
+```bash
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+```
+
+### 8.3 Launch Nav2 with restricted zone layer
+
+```bash
+ros2 launch turtlebot3_navigation2 navigation2.launch.py \
+  use_sim_time:=True \
+  params_file:=$HOME/geckon_ws/src/restricted_zone_layer/config/restricted_nav2_params.yaml
+```
+
+**Notes about the YAML**
+Your `restricted_nav2_params.yaml` must include the plugin in both **local** and **global** costmap `plugins` lists.
+### 8.4 Start the visualization node
+
+```bash
+ros2 run restricted_zone_viz zone_viz
+```
+
+Expected log:
+
+```
+[INFO] [restricted_zone_visualizer]: restricted_zone_visualizer is running.
+```
+
+### 8.5 Publish a polygon (example: 1 m square at origin)
+
+In a new terminal:
+
+```bash
+ros2 topic pub /restricted_zone/polygons geometry_msgs/PolygonStamped "
+header:
+  frame_id: map
+polygon:
+  points:
+  - {x: 0.0, y: 0.0, z: 0.0}
+  - {x: 1.0, y: 0.0, z: 0.0}
+  - {x: 1.0, y: 1.0, z: 0.0}
+  - {x: 0.0, y: 1.0, z: 0.0}
+" -1
+```
+
+This continuously republishes, ensuring the layer receives data even after Nav2 restarts.
+
+### 8.6 Open RViz (if not already running)
+
+```bash
+ros2 run rviz2 rviz2
+```
+
+Add displays:
+
+* Map (`/map`)
+* RobotModel
+* Marker (`/restricted_zone/markers`)
+* Global/Local Costmaps
+* Path
+
+You should see a red polygon and inflated/blocked cells in costmaps across that area.
+
+### 8.7 Send a goal
+
+Use **2D Nav Goal** in RViz.
+If the goal lies across or inside the polygon, the planner should produce a path that detours around the restricted region.
+
+---
+
+
+## 9. Outcome
+
+With the plugin enabled and polygons published in the `map` frame, Nav2 composes the restricted zone layer with other layers and produces paths that avoid these polygons. The visualization node provides clear operator feedback. Evidence files and bag recordings can be produced from the commands above for review and archival.
+
+---
+
 # Deliverable 3: Autonomous Patrol and Navigation
 
 This deliverable demonstrates **autonomous patrol and navigation** using TurtleBot3 in Gazebo with the **Navigation2 (Nav2) stack**.  

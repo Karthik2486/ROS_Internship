@@ -119,27 +119,10 @@ This approach uses standard Nav2 extension points, so we keep the built-in plann
 
 ---
 
-## 6. Simplified data flow
+## 6. rqt graph
 
-```
+<img width="6290" height="3691" alt="rosgraph_restricted_zone" src="https://github.com/user-attachments/assets/eacfc6e8-6668-44c1-a34f-00fb502f862d" />
 
-User / Tools (publish PolygonStamped)
-|
-v
-/ restricted_zone / polygons  (geometry_msgs/PolygonStamped)
-|                                 |
-|                                 +--> restricted_zone_viz
-|                                       - Subscribes to polygons
-|                                       - Publishes /restricted_zone/markers (Marker)
-|
-+--> restricted_zone_layer (costmap plugin)
-- Subscribes to polygons
-- Writes lethal cells into costmap
-|
-v
-Nav2 Global/Local Costmaps  --->  Nav2 Planner/Controller  ---> Robot avoids restricted zones
-
-````
 
 Key topics:
 - **Input polygon**: `/restricted_zone/polygons`  

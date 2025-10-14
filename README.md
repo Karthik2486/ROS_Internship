@@ -7,8 +7,7 @@ Since TurtleBot3 already provides official packages for SLAM and Navigation2, th
 
 - **SLAM (Cartographer)** for map building  
 - **Persistent map saving** (YAML + PGM)  
-- **Localisation with AMCL**  
-- **Re-localisation after reboot or drift**  
+- **Localisation with AMCL**    
 
 ---
 

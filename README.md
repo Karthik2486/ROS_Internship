@@ -319,7 +319,7 @@ Run these commands so all nodes sync with the bag’s clock:
 Step 3 – Replay the bag
 
       
-      ros2 bag play ~/geckon_ws/bags/autonav_nav2 --clock
+      ros2 bag play ~/geckon_ws/bags/basic_nav --clock
 ---
  Expected Results
 

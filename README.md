@@ -47,6 +47,16 @@ Close Cartographer, then start Navigation2 with the saved map:
             ros2 launch turtlebot3_navigation2 navigation2.launch.py \
             use_sim_time:=True map:=$HOME/geckon_ws/saved_maps/my_map.yaml
 
+* Structure I used:
+  
+| Function                | Package                   | Launch File                                           |
+| ----------------------- | ------------------------- | ----------------------------------------------------- |
+| **Simulation world**    | `turtlebot3_gazebo`       | `turtlebot3_world.launch.py`                          |
+| **SLAM (Cartographer)** | `turtlebot3_cartographer` | `cartographer.launch.py`                              |
+| **Teleoperation**       | `turtlebot3_teleop`       | Run with `ros2 run turtlebot3_teleop teleop_keyboard` |
+| **Navigation**          | `turtlebot3_navigation2`  | `navigation2.launch.py`                               |
+
+
  Deliverable Objectives Met
 - Mapping: Achieved using Cartographer.
 - Persistent map: Saved with map_saver_cli.

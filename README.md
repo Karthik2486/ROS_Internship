@@ -73,7 +73,7 @@ Implement “restricted zones” that the robot must not enter while using the s
 
 ---
 
-## 2. What was implemented (high-level)
+## 2. What was implemented 
 
 1. **A Nav2 Costmap Plugin (`restricted_zone_layer`)**  
    - C++ plugin for `nav2_costmap_2d`.  
